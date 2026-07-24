@@ -8,7 +8,6 @@
 :root {
   /* Palette */
   --green-dark: hsl(99 50% 13%);   /* links, titles, footer text, buttons */
-  --green-mid:  hsl(99 50% 40%);   /* secondary accents */
   --text:       hsl(99 40% 20%);   /* body copy */
   --muted:      hsl(99 50% 46%);   /* tagline, labels, "(required)" */
   --border:     hsl(99 50% 73%);   /* form field borders, button hover */
@@ -113,7 +112,7 @@ a:hover { color: var(--muted); }
 .site-nav ul {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 1.5rem;
   margin: 0;
   padding-block: 0.75rem;
@@ -129,9 +128,6 @@ a:hover { color: var(--muted); }
 .site-nav a[aria-current="page"] { color: var(--muted); }
 
 /* Scroll down arrow */
-.scroll-down-item {
-  margin-left: auto;
-}
 .scroll-down-arrow {
   font-size: 1.25rem;
   color: var(--green-dark);
