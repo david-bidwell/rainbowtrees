@@ -45,13 +45,7 @@
           <p><strong>ABN:</strong> 14 463 001 466</p>
         </div>
 
-        <!-- ============================================================
-             PLACEHOLDER CONTACT FORM
-             Looks like the original but does nothing yet — there is no
-             `action` and the button is type="button", so it can't send.
-             We'll decide how to wire it up (e.g. Formspree) next.
-             ============================================================ -->
-        <!-- <form class="contact-form">
+        <form class="contact-form">
           <div class="field">
             <label for="name">Name <span>(required)</span></label>
             <input type="text" id="name" name="name">
@@ -64,8 +58,13 @@
             <label for="comment">Comment <span>(required)</span></label>
             <textarea id="comment" name="comment" rows="8"></textarea>
           </div>
+          <div class="field" style="position:absolute; left:-9999px;" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+          </div>
           <button type="button" class="contact-button">Submit</button>
-        </form> -->
+          <p id="contact-status" role="status" aria-live="polite"></p>
+        </form>
 
       </div>
     </div>
@@ -77,6 +76,49 @@
       <img class="footer-wordmark" src="images/footer2c.webp" alt="">
     </div>
   </footer>
+
+  <script>
+    const form = document.querySelector(".contact-form");
+    const button = form.querySelector(".contact-button");
+    const status = document.getElementById("contact-status");
+
+    button.addEventListener("click", async () => {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const comment = document.getElementById("comment").value.trim();
+      const website = document.getElementById("website").value.trim(); // honeypot
+
+      if (!name || !email || !comment) {
+        status.textContent = "Please fill in your name, email, and comment.";
+        return;
+      }
+
+      button.disabled = true;
+      status.textContent = "Sending...";
+
+      const data = new FormData();
+      data.append("name", name);
+      data.append("email", email);
+      data.append("comment", comment);
+      data.append("website", website);
+
+      try {
+        const res = await fetch("https://contact.rainbowtrees.com.au/send.php", {
+          method: "POST",
+          body: data,
+        });
+        const result = await res.json();
+        status.textContent = result.success
+          ? "Thanks — your message has been sent!"
+          : (result.error || "Something went wrong. Please try again.");
+        if (result.success) form.reset();
+      } catch {
+        status.textContent = "Something went wrong. Please check your connection and try again.";
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
 
 </body>
 </html>
